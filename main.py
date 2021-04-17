@@ -1,4 +1,8 @@
-transitionTable = dict(string, dict(string, string))
+# import txt file
+
+# initialize transition table
+transitionTable = {'state': None, 'character': {
+    'state': None, 'character': None}}
 
 
 def transitionFunction(state, character):
@@ -12,8 +16,8 @@ def extendedTransitionFunction(state, chars):
         if(len(chars) == 1):
             return transitionFunction(state, chars)
         else:
-            firstPart = 'x'
-            lastChar = 'y'
+            firstPart = chars[-1]
+            lastChar = chars[-1]+''
 
             transitionFunction(extendedTransitionFunction(
                 state, firstPart), lastChar)
