@@ -1,12 +1,22 @@
 # import txt file
+file = open('test1.txt', 'r')
+reader = file.read()
+# print(reader)
+# states = FIRST LINE
+# symbols = SECOND LINE
+# initialState = THIRD LINE
+# finalStates = FOURTH LIINE
+# transitionTable format: state, symbol => states(csv) WHERE 'lambda'==spontaneous transition
+
 
 # initialize transition table
-transitionTable = {'state': None, 'character': {
-    'state': None, 'character': None}}
+transitionTable = {'currentState': None, 'transition': {
+    'character': None, 'newState': None}}
 
 
 def transitionFunction(state, character):
     return transitionTable(state, character)
+    # returns a state
 
 
 def extendedTransitionFunction(state, chars):
