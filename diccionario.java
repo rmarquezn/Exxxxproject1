@@ -17,7 +17,7 @@ public extendedTransitionFunctioin(String state, String chars){
             String firstPart = chars.substring(chars.length()-1);
             String lastChar = chars.charAt(chars.length()-1)+"";
 
-            transitionFunction(extendedTransitionFunction(state,firstPart),lastChar);
+            return transitionFunction(extendedTransitionFunction(state,firstPart),lastChar);
         }
     }
 }
