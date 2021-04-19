@@ -1,17 +1,44 @@
 # ask for input file and create file name
-n = input('¿Que archivo deseas utilizar? (1/2)')
+n = 1  # input('¿Que archivo deseas utilizar? (1/2)')
 fileName = (f'test{n}.txt')
 
 # import and read file
 file = open(fileName, 'r')
 reader = file.read()
-print(reader)
+reader = reader.splitlines()
+print(f'file array = {reader}\n')
 # states = FIRST LINE
+states = reader.pop(0)
+states = states.split(',')
+print(f'states = {states}\n')
 # symbols = SECOND LINE: a,b,lambda
+symbols = reader.pop(0)
+symbols = symbols.split(',')
+symbols.append('lambda')
+print(f'symbols = {symbols}\n')
 # initialState = THIRD LINE
+initial = reader.pop(0)
+print(f'initial state = {initial}\n')
 # finalStates = FOURTH LIINE
+final = reader.pop(0)
+final = final.split(',')
+print(f'final states = {final}\n')
 # transitionTable format: state, symbol(character) => states(csv) WHERE 'lambda'==spontaneous transition
-
+currentStateList = []
+transitionsList = []
+newTransitionsList = []
+for element in reader:
+    currentStateList.append(element[:2])
+    transitionsList.append(element[3:])
+print(f'transitions = {transitionsList}\n')
+for trans in transitionsList:
+    trans = trans.split('=>')
+    newTransitionsList.append(trans)
+print(f'current state list = {currentStateList}\n')
+print(f'new transitions = {newTransitionsList}\n')
+for t in newTransitionsList:
+    t[1] = t[1].split(',')
+print(f'final transitions = {newTransitionsList}\n')
 
 # initialize transition table
 transitionTable = {'currentState': None, 'transition': {
