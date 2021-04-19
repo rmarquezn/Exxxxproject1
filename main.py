@@ -30,15 +30,13 @@ newTransitionsList = []
 for element in reader:
     currentStateList.append(element[:2])
     transitionsList.append(element[3:])
-print(f'transitions = {transitionsList}\n')
+print(f'current state list = {currentStateList}\n')
 for trans in transitionsList:
     trans = trans.split('=>')
     newTransitionsList.append(trans)
-print(f'current state list = {currentStateList}\n')
-print(f'new transitions = {newTransitionsList}\n')
 for t in newTransitionsList:
     t[1] = t[1].split(',')
-print(f'final transitions = {newTransitionsList}\n')
+print(f'transitions = {newTransitionsList}\n')
 
 # initialize transition table
 transitionTable = {'currentState': None, 'transition': {
