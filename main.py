@@ -56,6 +56,7 @@ for s in states:
     for sym in symbols:
         transitionTable[str(s)][str(sym)] = []
 print(f'initialized transition table = {transitionTable}\n')
+
 # tabla = {'state': {'character': newStateList[]}
 
 # populate transition table
@@ -72,7 +73,7 @@ for st in currentStateList:
 
 def transitionFunction(state, character):
     # state = transitionTable['currentState']
-    # character = transitionTable['transition']['character']
+    # character = transitionTable['currentState']['character']
 
     # return = transitionTable['transition']['newState']
     print(f'transitionfunction({state},{character})')
@@ -85,7 +86,7 @@ def transitionFunction(state, character):
 
 # test
 transitionFunction(initial, symbols[0])
-transitionFunction(states[3], symbols[2])
+transitionFunction(states[6], symbols[1])
 # !!!! returns the new state depending on current state and character
 # ∂(qx,s)=qy
 # WHERE qx: state, s:character, qy: transitionTable(transition,newState)
@@ -94,15 +95,15 @@ transitionFunction(states[3], symbols[2])
 def extendedTransitionFunction(state, chars):
     # receives current state and transition string
     # ∂'(qx,s)=∂(qx,c)=qy
-    # WHERE qx:currentState, s:transition string, c: currentChar, qz:  newState
-    # WHERE
+    # WHERE qx:currentState, s:transition string, c: currentChar, qy:  newState
+    # WHERE state = currentState[0], chars stringChar
     if (len(chars) == 0):
         return state
     else:
         if(len(chars) == 1):
             return transitionFunction(state, chars[0])
         else:
-            firstPart = chars[:-1]  # character array minus the last character
+            firstPart = chars[:-1]  # character string minus the last character
             lastChar = chars[-1]  # only the character, not a string
 
             transitionFunction(extendedTransitionFunction(
