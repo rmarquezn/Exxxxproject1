@@ -60,13 +60,12 @@ print(f'initialized transition table = {transitionTable}\n')
 # tabla = {'state': {'character': newStateList[]}
 
 # populate transition table
+index = 0
 for st in currentStateList:
-    print(f'state: {st}')
-    for t in finalTransitionList:
-        print(f'character: {t[0]}')
-        print(f'new states:{t[1]}')
-        #transitionTable[str(st)][str(t[0])] = t[1]
-#print(f'populated transition table = {transitionTable}\n')
+    transitionTable[str(st)][str(finalTransitionList[index]
+                                 [0])] = finalTransitionList[index][1]
+    index = index+1
+print(f'populated transition table = {transitionTable}\n')
 # ∂(qx,s)=qy
 # WHERE qx: currentState, s:transition,character, qy:transition,newState
 
@@ -85,7 +84,7 @@ def transitionFunction(state, character):
 
 
 # test
-transitionFunction(initial, symbols[0])
+transitionFunction(initial, symbols[2])
 transitionFunction(states[6], symbols[1])
 # !!!! returns the new state depending on current state and character
 # ∂(qx,s)=qy
