@@ -6,7 +6,7 @@
 
 # ask for input file and create file name
 import numpy as np
-n = 1  # input('¿Que archivo deseas utilizar? (1/2)')
+n = input('¿Que archivo deseas utilizar? (1/2)')
 fileName = (f'test{n}.txt')
 
 # import and read file
@@ -64,64 +64,85 @@ for st in currentStateList:
     index = index+1
 print(f'transition table = {transitionTable}\n')
 # ∂(qx,s)=qy
-# WHERE qx: currentState, s:transition,character, qy:transition,newState
+# WHERE qx: currentState, s:character, qy:newState
 
 
 def transitionFunction(state, character):
     # state = transitionTable['currentState']
     # character = transitionTable['currentState']['character']
 
-    # return = transitionTable['transition']['newState']
-    print(f'transitionfunction({state},{character})')
-    print(f'state = {state}')
-    print(f'character = {character}')
-    print('new states = ')
-    print(transitionTable[f'{state}'][f'{character}'])
     return transitionTable[f'{state}'][f'{character}']
-
-
 # !!!! returns the new state depending on current state and character
-# ∂(qx,s)=qy
-# WHERE qx: state, s:character, qy: transitionTable(transition,newState)
 
 
 def extendedTransitionFunction(state, chars):
     # receives current state and transition string
     # ∂'(qx,s)=∂(qx,c)=qy
-    # WHERE qx:currentState, s:transition string, c: currentChar, qy:  newState
-    # WHERE state = currentState[0], chars stringChar
-    lambdaStates = transitionFunction(state, 'lambda')
+    # WHERE qx:currentState, s:transition string, c: character, qy: new state
+    # state must always be the initial state
+
+    print(f'\nextendedTransition({state},{chars})')
+    # finds lambda transition states
+    if not transitionFunction(state, 'lambda'):
+        lambdaStates = state
+    # if there are no lambda transitions we stay in the current state
+    else:
+        lambdaStates = transitionFunction(state, 'lambda')
+    print(f'lambda states: {lambdaStates}\n')
+    # if the string is empty we return the current state
     if (len(chars) == 0):
         return lambdaStates
-    else:
+
+    # we evaluate the string until it's empty
+    while(len(chars) != 0):
+        print(f'string: {chars}')
+        print(f'current states: {lambdaStates}')
+        print(f'transition character: {chars[0]}')
         tempStates = []
+        # we find the new states
         for s in lambdaStates:
             if transitionFunction(str(s), chars[0]) != None:
-                tempStates.append(transitionFunction(str(s), chars[0]))
-        lambdaStates = []
+                tempStates = tempStates + \
+                    (transitionFunction(str(s), chars[0]))
+        lambdaStates = tempStates
+        print(f'new states: {tempStates}')
 
-        for ls in tempStates:
-            if transitionFunction(str(ls), 'lambda') != None:
-                lambdaStates.append(transitionFunction(str(ls), 'lambda'))
+        # we evaluate lambda transitions to find the new lambda states
+        for ls in tempStates[:]:
+            if transitionFunction(str(ls), 'lambda'):
+                lambdaStates.remove(ls)
+                lambdaStates = lambdaStates + \
+                    (transitionFunction(str(ls), 'lambda'))
+        print(f'new lambda states: {lambdaStates}\n')
+        # we remove the evaluated character from the string
         chars = chars[1:]
-    tempEL = []
+
+    tempList = []
+    finalLast = None
+    # we create a list with the last states and evaluate if they're final
     for lambS in lambdaStates:
-        tempEL.append(transitionFunction(str(lambS), 'lambda'))
-        finished = np.array([tempEL])
-        finished = finished.flatten()
-        finished2 = np.unique(finished)
-    return finished2
+        if not transitionFunction(str(lambS), 'lambda'):
+            tempList.append(str(lambS))
+        else:
+            tempList.append(str(transitionFunction(str(lambS), 'lambda')))
+        last = np.array([tempList])
+        last = last.flatten()
+        finalLast = np.unique(last)
+    finalStates = np.array(final)
 
-    # if(len(chars) == 1):
-    #     return transitionFunction(state, chars[0])
-    # else:
-    #     firstPart = chars[:-1]  # character string minus the last character
-    #     lastChar = chars[-1]  # only the character, not a string
-
-    #     transitionFunction(extendedTransitionFunction(
-    #         state, firstPart), lastChar)
+    # if a state is final we print it
+    if np.any(np.in1d(finalLast, finalStates)):
+        finishedSet = set(finalLast) & set(finalStates)
+        print(f'\nYour final state is: {finishedSet}')
+    # if no state is final we reject the string and print the last state
+    else:
+        print(
+            f'\nYour string cannot be evaluated as your current state ({finalLast}) is not final')
+    return finalLast
 
 
 # ask for string to evaluate
 evalString = input('Que string deseas evaluar?\n')
+
+# run extended transition function
 extendedTransitionFunction(initial, evalString)
