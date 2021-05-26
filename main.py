@@ -64,6 +64,7 @@ for st in currentStateList:
 print(f'transition table = {transitionTable}\n')
 # ∂(qx,s)=qy
 # WHERE qx: currentState, s:character, qy:newState
+lambdaStates = []
 
 
 def transitionFunction(state, character):
@@ -74,14 +75,16 @@ def transitionFunction(state, character):
 # !!!! returns the new state depending on current state and character
 
 
-def lambdaTransition(state, chars):
+def lambdaTransition(state):
     if not transitionFunction(state, 'lambda'):
-        return state
+        return [state]
         print(f'lambda states: {state}\n')
     # if there are no lambda transitions we stay in the current state
     else:
-        return transitionFunction(state, 'lambda')
-        print(f'lambda states: {transitionFunction(state, "lambda")}\n')
+        newState = transitionFunction(state, 'lambda')
+        print(newState[0])
+        lambdaTransition(newState[0])
+        print(f'lambda states: {transitionFunction(newState[0], "lambda")}\n')
 
 
 def extendedTransitionFunction(state, chars):
@@ -92,7 +95,7 @@ def extendedTransitionFunction(state, chars):
 
     print(f'\nextendedTransition({state},{chars})')
     # finds lambda transition states
-    lambdaStates = lambdaTransition(state, chars)
+    lambdaStates = lambdaTransition(state)
     # if the string is empty we return the current state
     if (len(chars) == 0):
         return lambdaStates
@@ -104,7 +107,7 @@ def extendedTransitionFunction(state, chars):
     tempStates = []
     # we find the new states
     for stt in lambdaStates:
-        if transitionFunction(str(stt), chars[0]) != None:
+        if transitionFunction(stt, chars[0]) != None:
             tempStates = tempStates + \
                 (transitionFunction(str(stt), chars[0]))
     lambdaStates = tempStates
@@ -118,7 +121,8 @@ def extendedTransitionFunction(state, chars):
                 (transitionFunction(str(ls), 'lambda'))
     print(f'new lambda states: {lambdaStates}\n')
     # we remove the evaluated character from the string
-    extendedTransitionFunction(state, chars[1:])
+    for lstt in lambdaStates:
+        extendedTransitionFunction(lstt, chars[1:])
     return lambdaStates
 
 
@@ -152,5 +156,3 @@ evalString = input('Que string deseas evaluar?\n')
 
 # run extended transition function
 finalCheck(extendedTransitionFunction(initial, evalString))
-
-
