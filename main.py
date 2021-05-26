@@ -117,9 +117,6 @@ def extendedTransitionFunction(state, chars):
             finishedSet = set(finalLast) & set(finalStates)
             print(f'\nYour final state is: {finishedSet}')
         # if no state is final we reject the string and print the last state
-        else:
-            print(
-                f'\nYour string cannot be evaluated as your current state ({finalLast}) is not final')
     else:
 
         # we evaluate the string until it's empty
@@ -132,6 +129,11 @@ def extendedTransitionFunction(state, chars):
             if transitionFunction(stt, chars[0]) != None:
                 tempStates = tempStates + \
                     (transitionFunction(str(stt), chars[0]))
+
+        if not tempStates:
+            print(
+                f'\nYour string cannot be evaluated as your current state ({lambdaStates}) is not final')
+
         lambdaStates = tempStates
         print(f'new states: {tempStates}')
 
