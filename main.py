@@ -65,6 +65,7 @@ print(f'transition table = {transitionTable}\n')
 # ∂(qx,s)=qy
 # WHERE qx: currentState, s:character, qy:newState
 lambdaStates = []
+finalStates = []
 
 
 def transitionFunction(state, character):
@@ -77,14 +78,13 @@ def transitionFunction(state, character):
 
 def lambdaTransition(state):
     if not transitionFunction(state, 'lambda'):
-        return [state]
         print(f'lambda states: {state}\n')
+        return [state]
     # if there are no lambda transitions we stay in the current state
     else:
         newState = transitionFunction(state, 'lambda')
         print(newState[0])
-        lambdaTransition(newState[0])
-        print(f'lambda states: {transitionFunction(newState[0], "lambda")}\n')
+        return lambdaTransition(newState[0])
 
 
 def extendedTransitionFunction(state, chars):
@@ -98,32 +98,53 @@ def extendedTransitionFunction(state, chars):
     lambdaStates = lambdaTransition(state)
     # if the string is empty we return the current state
     if (len(chars) == 0):
-        return lambdaStates
 
-    # we evaluate the string until it's empty
-    print(f'string: {chars}')
-    print(f'current states: {lambdaStates}')
-    print(f'transition character: {chars[0]}')
-    tempStates = []
-    # we find the new states
-    for stt in lambdaStates:
-        if transitionFunction(stt, chars[0]) != None:
-            tempStates = tempStates + \
-                (transitionFunction(str(stt), chars[0]))
-    lambdaStates = tempStates
-    print(f'new states: {tempStates}')
+        tempList = []
+        finalLast = None
+        # we create a list with the last states and evaluate if they're final
+        for lambS in lambdaStates:
+            if not transitionFunction(str(lambS), 'lambda'):
+                tempList.append(str(lambS))
+            else:
+                tempList.append(str(transitionFunction(str(lambS), 'lambda')))
+            last = np.array([tempList])
+            last = last.flatten()
+            finalLast = np.unique(last)
+        finalStates = np.array(final)
 
-    # we evaluate lambda transitions to find the new lambda states
-    for ls in tempStates[:]:
-        if transitionFunction(str(ls), 'lambda'):
-            lambdaStates.remove(ls)
-            lambdaStates = lambdaStates + \
-                (transitionFunction(str(ls), 'lambda'))
-    print(f'new lambda states: {lambdaStates}\n')
-    # we remove the evaluated character from the string
-    for lstt in lambdaStates:
-        extendedTransitionFunction(lstt, chars[1:])
-    return lambdaStates
+        # if a state is final we print it
+        if np.any(np.in1d(finalLast, finalStates)):
+            finishedSet = set(finalLast) & set(finalStates)
+            print(f'\nYour final state is: {finishedSet}')
+        # if no state is final we reject the string and print the last state
+        else:
+            print(
+                f'\nYour string cannot be evaluated as your current state ({finalLast}) is not final')
+    else:
+
+        # we evaluate the string until it's empty
+        print(f'string: {chars}')
+        print(f'current states: {lambdaStates}')
+        print(f'transition character: {chars[0]}')
+        tempStates = []
+        # we find the new states
+        for stt in lambdaStates:
+            if transitionFunction(stt, chars[0]) != None:
+                tempStates = tempStates + \
+                    (transitionFunction(str(stt), chars[0]))
+        lambdaStates = tempStates
+        print(f'new states: {tempStates}')
+
+        # we evaluate lambda transitions to find the new lambda states
+        for ls in tempStates[:]:
+            if transitionFunction(str(ls), 'lambda'):
+                lambdaStates.remove(ls)
+                lambdaStates = lambdaStates + \
+                    (transitionFunction(str(ls), 'lambda'))
+        print(f'new lambda states: {lambdaStates}\n')
+        # we remove the evaluated character from the string
+        for lstt in lambdaStates:
+            extendedTransitionFunction(lstt, chars[1:])
 
 
 def finalCheck(lambdaStates):
@@ -153,6 +174,6 @@ def finalCheck(lambdaStates):
 
 # ask for string to evaluate
 evalString = input('Que string deseas evaluar?\n')
-
 # run extended transition function
-finalCheck(extendedTransitionFunction(initial, evalString))
+
+extendedTransitionFunction(initial, evalString)
