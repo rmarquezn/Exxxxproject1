@@ -1,0 +1,17 @@
+You have these warnings
+
+Line 45 : Incompatible types in assignment (expression has type "List[str]", variable has type "str")
+Line 48 : Unsupported target for indexed assignment
+Line 51 : Need type annotation for 'transitionTable' (hint: "transitionTable: Dict[<type>, <type>] = ...")
+Line 101 : Need type annotation for 'tempStates' (hint: "tempStates: List[<type>] = ...")
+Line 103 : Redefining name 's' from outer scope (line 52)
+It looks like the local variable is hiding a global variable with the same name.
+Most likely there is nothing wrong with this. I just wanted to remind you that you can't access the global variable like this. If you knew it then please ignore the warning.
+If you don't want to see this reminder in the future, then add "redefined-outer-name" (without quotes) into "Tools → Options → Assistant → Disabled checks".
+Line 135 : Argument 1 to "set" has incompatible type "Optional[Any]"; expected "Iterable[Any]"
+
+-------
+
+The lambda closure is not working properly because, when you want to compute it, you only get the lambda transitions from the state instead of the whole path that you can traverse processing only lambda transitions. This is the big problem with your code. The rest, seems correct. 
+
+Your extended transition function  should return the states that you get after processing the string. Checking if the string is accepted should be done in another method.

@@ -46,7 +46,6 @@ for trans in transitionsList:
     finalTransitionList.append(trans)
 for t in finalTransitionList:
     t[1] = t[1].split(',')
-
 # initialize transition table
 transitionTable = {}
 for s in states:
@@ -75,6 +74,16 @@ def transitionFunction(state, character):
 # !!!! returns the new state depending on current state and character
 
 
+def lambdaTransition(state, chars):
+    if not transitionFunction(state, 'lambda'):
+        return state
+        print(f'lambda states: {state}\n')
+    # if there are no lambda transitions we stay in the current state
+    else:
+        return transitionFunction(state, 'lambda')
+        print(f'lambda states: {transitionFunction(state, "lambda")}\n')
+
+
 def extendedTransitionFunction(state, chars):
     # receives current state and transition string
     # ∂'(qx,s)=∂(qx,c)=qy
@@ -83,12 +92,7 @@ def extendedTransitionFunction(state, chars):
 
     print(f'\nextendedTransition({state},{chars})')
     # finds lambda transition states
-    if not transitionFunction(state, 'lambda'):
-        lambdaStates = state
-    # if there are no lambda transitions we stay in the current state
-    else:
-        lambdaStates = transitionFunction(state, 'lambda')
-    print(f'lambda states: {lambdaStates}\n')
+    lambdaStates = lambdaTransition(state, chars)
     # if the string is empty we return the current state
     if (len(chars) == 0):
         return lambdaStates
@@ -100,10 +104,10 @@ def extendedTransitionFunction(state, chars):
         print(f'transition character: {chars[0]}')
         tempStates = []
         # we find the new states
-        for s in lambdaStates:
-            if transitionFunction(str(s), chars[0]) != None:
+        for stt in lambdaStates:
+            if transitionFunction(str(stt), chars[0]) != None:
                 tempStates = tempStates + \
-                    (transitionFunction(str(s), chars[0]))
+                    (transitionFunction(str(stt), chars[0]))
         lambdaStates = tempStates
         print(f'new states: {tempStates}')
 
